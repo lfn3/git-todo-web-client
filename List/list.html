@@ -1,5 +1,9 @@
-<ul>
-	<li ng-repeat>
-		{{name}}
-	</li>
-</ul>
+<h2>Repo List</h2>
+<div ng-repeat="repo in repos">
+	<h3>{{repo.name}}</h3>
+	<ul>
+		<li ng-repeat="file in repo.files">
+			{{file.name}}
+		</li>
+	</ul>
+</div>
