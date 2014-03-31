@@ -1,1 +1,1 @@
-var List = angular.module("List", [])
+List = angular.module("List", ["ngResource"])

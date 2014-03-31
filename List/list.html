@@ -1,9 +1,9 @@
 <h2>Repo List</h2>
 <div ng-repeat="repo in repos">
-	<h3>{{repo.name}}</h3>
+	<h3>{{repo.RepoName}}</h3>
 	<ul>
-		<li ng-repeat="file in repo.files">
-			{{file.name}}
+		<li ng-repeat="file in repo.Files">
+			{{file.FileName}}
 		</li>
 	</ul>
 </div>
