@@ -3,7 +3,7 @@
 	<h3>{{repo.RepoName}}</h3>
 	<ul>
 		<li ng-repeat="file in repo.Files">
-			{{file.FileName}}
+			<a href="/repo/{{repo.RepoName}}/file/{{file.FileName}}">{{file.FileName}}</a>
 		</li>
 	</ul>
 </div>

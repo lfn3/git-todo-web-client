@@ -5,13 +5,17 @@ gitTodoWeb.config(function($routeProvider, $locationProvider){
 			controller: "RepoListController",
 			templateUrl: "repos/list.html"
 		})
-		.when("/repos", {
+		.when("/repo", {
 			controller: "RepoListController",
 			templateUrl: "repos/list.html"
 		})
-		.when("/repos/:repoName", {
+		.when("/repo/:repoName", {
 			controller: "ListController",
-			templateUrl: "List/list.html"
+			templateUrl: "repos/list.html"
+		})
+		.when("/repo/:repoName/file/:fileName", {
+			controller: "FileController",
+			templateUrl: "repos/files/file.html"
 		});
 
 	$locationProvider.html5Mode(true);
