@@ -1,4 +1,6 @@
-Repos.controller("FileController", ["$scope", "$routeParams", "repositories", function($scope, $routeParams, repositories){
+Repos.controller("FileController", [
+	"$scope", "$routeParams", "repositories", 
+	function($scope, $routeParams, repositories){
 	file = {
 		fileName: $routeParams.fileName
 	}
