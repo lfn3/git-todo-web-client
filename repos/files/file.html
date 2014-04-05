@@ -1,3 +1,11 @@
 <h2>{{file.fileName}}</h2>
 
-<div ng-bind-html="file.contents"></div>
+<article class="file-history">
+	<ul>
+		<li ng-repeat="row in file.history">
+			<a ng-repeat="historyEntry in row" href="/repo/{{repoName}}/commit/{{historyEntry.Sha}}/file/{{file.fileName}}">{{historyEntry.Date}}</a>
+		</li>
+	</ul>
+</article>
+<article class="file-content" ng-bind-html="file.contents"></article>
+
