@@ -3,7 +3,7 @@
 <article class="file-history">
 	<ul>
 		<li ng-repeat="row in file.history">
-			<a ng-repeat="historyEntry in row" href="/repo/{{repoName}}/commit/{{historyEntry.Sha}}/file/{{file.fileName}}">{{historyEntry.Date}}</a>
+			<a ng-class="{selected: historyEntry.selected}" ng-repeat="historyEntry in row" href="/repo/{{repoName}}/commit/{{historyEntry.Sha}}/file/{{file.fileName}}">{{historyEntry.Date}}</a>
 		</li>
 	</ul>
 </article>

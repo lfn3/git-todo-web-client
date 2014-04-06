@@ -15,8 +15,18 @@ Repos.controller("FileController", [
 		file.contents = fileContents;
 	});
 
-	fileReq.one("history").get().then(function(fileHistory){
+	repositories.one("repo", $routeParams.repoName).one("file", $routeParams.fileName).one("history").get().then(function(fileHistory){
 		file.history = fileHistory;
+		if ($routeParams.commitSha){
+			for (var i = file.history.length - 1; i >= 0; i--) {
+				if ($routeParams.commitSha == file.history[i][0].Sha){
+					file.history[i][0].selected = true;
+					break;
+				}
+			};
+		} else {
+			file.history[0][0].selected = true;
+		}
 	});
 	$scope.repoName = $routeParams.repoName;
 	$scope.file = file;
