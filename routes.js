@@ -16,6 +16,10 @@ gitTodoWeb.config(function($routeProvider, $locationProvider){
 		.when("/repo/:repoName/file/:fileName", {
 			controller: "FileController",
 			templateUrl: "repos/files/file.html"
+		})
+		.when("/repo/:repoName/commit/:commitSha/file/:fileName", {
+			controller: "FileController",
+			templateUrl: "repos/files/file.html"
 		});
 
 	$locationProvider.html5Mode(true);
