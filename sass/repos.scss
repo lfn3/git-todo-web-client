@@ -1,0 +1,14 @@
+.file-history ul {
+	padding: 0;
+	margin: 0;
+
+	list-style: none;
+
+	a, a:visited {
+		color: #27a5ce;
+	}
+
+	a.selected, a.selected:visited {
+		color: #1B40FF;
+	}
+}
