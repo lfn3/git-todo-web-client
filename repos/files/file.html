@@ -6,6 +6,18 @@
 			<a ng-class="{selected: historyEntry.selected}" ng-repeat="historyEntry in row" href="/repo/{{repoName}}/commit/{{historyEntry.Sha}}/file/{{file.fileName}}">{{historyEntry.Date}}</a>
 		</li>
 	</ul>
+	<label>
+		Compare to:
+		<!-- TODO: fix me so that this binds up correctly on location change. Either needs a custom directive or ng-option probably a custom directive since I want to maintain the heirarchy shizzle-->
+		<select ng-model="file.compareTo">
+			<option value="">Pick a commit</option>
+			<optgroup ng-repeat-start="row in file.history" ng-if="row.length > 1">
+				<option ng-repeat="historyEntry in row" ng-if="!historyEntry.selected" value="{{historyEntry.Sha}}">{{historyEntry.Date}}</option>
+			</optgroup>
+			<option ng-repeat-end ng-repeat="historyEntry in row" ng-if="row.length === 1 && !historyEntry.selected" value="{{historyEntry.Sha}}">{{historyEntry.Date}}</option>
+		</select>
+		<span ng-if="file.compareTo" ng-click="file.compareTo = ''">X</span>
+	</label>
 </article>
 <button ng-click="renderMarkdown = !renderMarkdown">Toggle markdown rendering</button>
 <div ng-if="renderMarkdown" gtw-markdown>{{file.contents}}</div>

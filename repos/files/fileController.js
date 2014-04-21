@@ -1,6 +1,6 @@
 Repos.controller("FileController", [
-	"$scope", "$routeParams", "repositories",
-	function($scope, $routeParams, repositories){
+	"$scope", "$routeParams", "repositories", "$location",
+	function($scope, $routeParams, repositories, $location){
 	$scope.renderMarkdown = true;
 	file = {
 		fileName: $routeParams.fileName
@@ -29,6 +29,21 @@ Repos.controller("FileController", [
 			file.history[0][0].selected = true;
 		}
 	});
+
+	if ($routeParams.compareTo){
+		file.compareTo = $routeParams.compareTo
+	}
+
 	$scope.repoName = $routeParams.repoName;
 	$scope.file = file;
+
+	$scope.$watch("file.compareTo",function(newValue, oldValue){
+		if (newValue != oldValue){
+			if (newValue == ""){
+				$location.search("compareTo", null);
+			} else {
+				$location.search("compareTo", newValue);
+			}
+		} 
+	});
 }]);
