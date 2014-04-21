@@ -1,6 +1,7 @@
 Repos.controller("FileController", [
-	"$scope", "$routeParams", "repositories", 
+	"$scope", "$routeParams", "repositories",
 	function($scope, $routeParams, repositories){
+	$scope.renderMarkdown = true;
 	file = {
 		fileName: $routeParams.fileName
 	};
