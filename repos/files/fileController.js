@@ -6,17 +6,19 @@ Repos.controller("FileController", [
 		fileName: $routeParams.fileName
 	};
 
+	var repoReq = repositories.one("repo", $routeParams.repoName);
+
 	if ($routeParams.commitSha) {
-		var fileReq = repositories.one("repo", $routeParams.repoName).one("commit", $routeParams.commitSha).one("file", $routeParams.fileName);
+		var fileReq = repoReq.one("commit", $routeParams.commitSha).one("file", $routeParams.fileName);
 	} else {
-		var fileReq = repositories.one("repo", $routeParams.repoName).one("file", $routeParams.fileName);
+		var fileReq = repoReq.one("file", $routeParams.fileName);
 	}
 
 	fileReq.get().then(function(fileContents){
 		file.contents = fileContents;
 	});
 
-	repositories.one("repo", $routeParams.repoName).one("file", $routeParams.fileName).one("history").get().then(function(fileHistory){
+	repoReq.one("file", $routeParams.fileName).one("history").get().then(function(fileHistory){
 		file.history = fileHistory;
 		if ($routeParams.commitSha){
 			for (var i = file.history.length - 1; i >= 0; i--) {
