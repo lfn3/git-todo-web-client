@@ -1,5 +1,7 @@
 //Todo: this could be made smarter by only updating changed portions of text.
 //Todo: get rid of that callback soup. It's balls
+//Todo: bind directly to a source (gtw-markdown="scope.whatever")
+//Todo: run through html sanitizer
 Repos.directive("gtwMarkdown", function(){
 	var regex = /\{\{(.*?)\}\}/;
 	var originalText = "";
