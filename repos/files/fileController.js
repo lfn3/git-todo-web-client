@@ -33,7 +33,10 @@ Repos.controller("FileController", [
 	});
 
 	if ($routeParams.compareTo){
-		file.compareTo = $routeParams.compareTo
+		file.compareTo = $routeParams.compareTo;
+		repoReq.one("commit", file.compareTo).one("file", $routeParams.fileName).get().then(function(fileContent){
+			file.compareToContent = fileContent;
+		})
 	}
 
 	$scope.repoName = $routeParams.repoName;

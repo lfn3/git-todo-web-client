@@ -12,3 +12,11 @@
 		color: #1B40FF;
 	}
 }
+
+span.removed {
+	background: rgba(155, 0, 0, 0.2);
+}
+
+span.added {
+	background: rgba(0, 155, 0, 0.2)
+}
