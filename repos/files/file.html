@@ -22,4 +22,4 @@
 <button ng-click="renderMarkdown = !renderMarkdown">Toggle markdown rendering</button>
 <div ng-if="renderMarkdown" gtw-markdown>{{file.contents}}</div>
 <div ng-if="!renderMarkdown && !file.compareTo" style="white-space: pre-line;">{{file.contents}}</div>
-<div ng-if="!renderMarkdown && file.compareTo" gtw-diff="file.compareToContent" style="white-space: pre-line;">{{file.contents}}</div>
+<div ng-if="!renderMarkdown && file.compareTo" gtw-text-diff="file.compareToContent" style="white-space: pre-line;">{{file.contents}}</div>

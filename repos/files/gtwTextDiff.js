@@ -1,4 +1,4 @@
-Repos.directive("gtwDiff", function(){
+Repos.directive("gtwTextDiff", function(){
 	var regex = /\{\{(.*?)\}\}/;
 	var originalText = "";
 
@@ -47,7 +47,7 @@ Repos.directive("gtwDiff", function(){
 			var dmp = new diff_match_patch();
 			originalText = elem.text();
 
-			var compareTo = scope.$eval(attr.gtwDiff);
+			var compareTo = scope.$eval(attr.gtwTextDiff);
 			setWatchers(elem.text(), scope, expandText, function(text){
 				var diff = dmp.diff_main(text, compareTo);
 				dmp.diff_cleanupSemantic(diff);
