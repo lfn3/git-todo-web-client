@@ -66,41 +66,76 @@ Repos.directive("gtwMarkdownDiff", function(){
 			var dmp = new diff_match_patch();
 			originalText = elem.text();
 
+			//TODO: Replace this with a watch on attr.gtwMarkdownDiff
 			window.setTimeout(function(){
 				var compareTo = scope.$eval(attr.gtwMarkdownDiff);
 
 				setWatchers(elem.text(), scope, expandText, function(text){
+					var html = marked(text);
+					elem.html(html);
 
-					var strippedText = stripHtmlTags(marked(text));
+					var strippedText = stripHtmlTags(html);
 					var strippedCompareTo = stripHtmlTags(marked(compareTo));
-
-					console.log(strippedText);
-					console.log(strippedCompareTo);
 
 					var diff = dmp.diff_main(strippedText, strippedCompareTo);
 					dmp.diff_cleanupSemantic(diff);
 
-					console.log(diff);
+					var searchLoc = strippedText.length;
+					for (var i = diff.length - 1; i >= 0; i--){
+						if (diff[i][1].match('\\w+')) continue;
+						switch (diff[i][0]){
+							case -1:
+								var removedStartTag = "<span class=\"removed\">";
+								var removedEndTag = "</span>";
 
-					// var text = "";
-					// for (var i = diff.length - 1; i >= 0; i--) {
-					// 	switch (diff[i][0]){
-					// 		case -1:
-					// 			text = "<span class=\"removed\">" + diff[i][1] + "</span>" + text;
-					// 		break;
-					// 		case 0:
-					// 			text = diff[i][1] + text;
-					// 		break;
-					// 		case 1:
-					// 			text = "<span class=\"added\">" + diff[i][1] + "</span>" + text;
-					// 		break;
-					// 	}
-					// };
-					// elem.html(text);
+								var currentSearchLoc = searchLoc - (Math.floor(diff[i][1].length / 2));
+								var match = dmp.match_main(elem.html(), diff[i][1].slice(0, 32), currentSearchLoc);
+
+								if (match === -1) continue; //TODO: Figure out what to do in this case.
+
+								//Match should be inside a bit of text rather than an html node...
+								//TODO: Check and fix this assumption
+								html = html.slice(0, match) + removedStartTag + html.slice(match);
+
+								var insertedTagLengths = removedStartTag.length;
+								var tagCharCount = 0;
+								var insideTagDepth = 0;
+								for(var j = 0; j < diff[i][1].length + tagCharCount + insertedTagLengths; j++){
+									if (j > html.length) break;
+									var currentPos = match + insertedTagLengths + j;
+									var currentChar = html.charAt(currentPos);
+									if(currentChar == '<'){
+										if (insideTagDepth === 0) {
+											html = html.slice(0, currentPos) + removedEndTag + html.slice(currentPos);
+											insertedTagLengths += removedEndTag.length;
+										}
+										insideTagDepth += 1;
+									} else if (insideTagDepth > 0 && currentChar == '>') {
+										insideTagDepth -= 1;
+										if (insideTagDepth === 0) {
+											html = html.slice(0, currentPos + 1) + removedStartTag + html.slice(currentPos + 1);
+											insertedTagLengths += removedStartTag.length;
+											tagCharCount += 1;
+										}
+									}
+									if (insideTagDepth > 0){
+										tagCharCount += 1;
+									}
+								}
+								html = html.slice(0, j) + removedEndTag + html.slice(j);
+							break;
+							case 0:
+								searchLoc -= diff[i][1].length;
+							break;
+							case 1:
+							break;
+						}
+					}
+
+					elem.html(html);
+					console.log(html);
 				});
-			}, 5000);
-
-			
+			}, 2000);
 		}
 	}
 });
