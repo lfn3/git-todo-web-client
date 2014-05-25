@@ -82,7 +82,7 @@ Repos.directive("gtwMarkdownDiff", function(){
 
 					var searchLoc = strippedText.length;
 					for (var i = diff.length - 1; i >= 0; i--){
-						if (diff[i][1].match('\\w+')) continue;
+						if (/^\s+$/.test(diff[i][1])) continue;
 						switch (diff[i][0]){
 							case -1:
 								var removedStartTag = "<span class=\"removed\">";
@@ -92,8 +92,9 @@ Repos.directive("gtwMarkdownDiff", function(){
 								var match = dmp.match_main(elem.html(), diff[i][1].slice(0, 32), currentSearchLoc);
 
 								if (match === -1) continue; //TODO: Figure out what to do in this case.
+								searchLoc = match;
 
-								var insideTagDepth = 0;
+								var insideTag = false;
 								var tagSearch = 0;
 								var insertedTagLengths = 0;
 								while (true){
@@ -104,7 +105,7 @@ Repos.directive("gtwMarkdownDiff", function(){
 									}
 
 									if (html.charAt(match + tagSearch) == ">") {
-										insideTagDepth = 1;
+										insideTag = true;
 										break;
 									}
 
@@ -116,24 +117,24 @@ Repos.directive("gtwMarkdownDiff", function(){
 									if (j > html.length) break;
 									var currentPos = match + insertedTagLengths + j;
 									var currentChar = html.charAt(currentPos);
-									if(currentChar == '<'){
-										if (insideTagDepth === 0) {
+									if(currentChar === '<'){
+										if (insideTag === false && html.charAt(currentPos - 1) !== ">") {
 											html = html.slice(0, currentPos) + removedEndTag + html.slice(currentPos);
 											insertedTagLengths += removedEndTag.length;
 										}
-										insideTagDepth += 1;
-									} else if (insideTagDepth > 0 && currentChar == '>') {
-										insideTagDepth -= 1;
-										if (insideTagDepth === 0) {
+									} else if (insideTag && currentChar === '>') {
+										insideTag = false;
+										if (html.charAt(currentPos + 1) !== "<") {
 											html = html.slice(0, currentPos + 1) + removedStartTag + html.slice(currentPos + 1);
 											insertedTagLengths += removedStartTag.length;
 											tagCharCount += 1;
 										}
 									}
-									if (insideTagDepth > 0){
+									if (insideTag){
 										tagCharCount += 1;
 									}
 								}
+								html = html.slice(0, match + diff[i][1].length + tagCharCount + insertedTagLengths) + removedEndTag + html.slice(match + diff[i][1].length + tagCharCount + insertedTagLengths);
 							break;
 							case 0:
 								searchLoc -= diff[i][1].length;
@@ -144,7 +145,7 @@ Repos.directive("gtwMarkdownDiff", function(){
 					}
 
 					elem.html(html);
-					console.log(html);
+					window.htmlStr = html;
 				});
 			}, 2000);
 		}
