@@ -93,13 +93,25 @@ Repos.directive("gtwMarkdownDiff", function(){
 
 								if (match === -1) continue; //TODO: Figure out what to do in this case.
 
-								//Match should be inside a bit of text rather than an html node...
-								//TODO: Check and fix this assumption
-								html = html.slice(0, match) + removedStartTag + html.slice(match);
-
-								var insertedTagLengths = removedStartTag.length;
-								var tagCharCount = 0;
 								var insideTagDepth = 0;
+								var tagSearch = 0;
+								var insertedTagLengths = 0;
+								while (true){
+									if (html.charAt(match + tagSearch) == "<"){
+										html = html.slice(0, match) + removedStartTag + html.slice(match);
+										insertedTagLengths += removedStartTag.length;
+										break;
+									}
+
+									if (html.charAt(match + tagSearch) == ">") {
+										insideTagDepth = 1;
+										break;
+									}
+
+									tagSearch++;
+								}
+
+								var tagCharCount = 0;
 								for(var j = 0; j < diff[i][1].length + tagCharCount + insertedTagLengths; j++){
 									if (j > html.length) break;
 									var currentPos = match + insertedTagLengths + j;
@@ -122,7 +134,6 @@ Repos.directive("gtwMarkdownDiff", function(){
 										tagCharCount += 1;
 									}
 								}
-								html = html.slice(0, j) + removedEndTag + html.slice(j);
 							break;
 							case 0:
 								searchLoc -= diff[i][1].length;
